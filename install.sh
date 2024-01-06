@@ -13,79 +13,24 @@ function copia() {
     sudo cp -rv ~/Bspwm2/root/usr/share/fonts/* "/usr/share/fonts/"
     sudo cp -rv ~/Bspwm2/root/usr/bin/* "/usr/bin/"
 
-    # descarga de fuentes
-    cd /usr/share/fonts/
-    megadl --print-names https://mega.nz/file/GxFVSLLY#etuNc6QRrEl6wgl_ZatvomojDhkBTFPqlKS7ELk7KAM
-    sudo unzip fonts.zip
-    sudo rm -rf fonts.zip
 }
 
 # INSTALACION DE REQUERIMIENTOS
 
-function requerimientos() {
-    # Update
-    sudo pacman -Syu --noconfirm
-
-    # yay
-    git clone https://aur.archlinux.org/yay-git.git
-    cd yay-git
-    makepkg --noconfirm -si
-
-    # git dash xsetroot xrandr xdpyinfo xrdb xset imagemagick megatools bc unzip
-    sudo pacman -S --noconfirm git dash xorg-xsetroot xorg-xrandr xorg-xdpyinfo xorg-xrdb xorg-xset imagemagick megatools bc unzip
-
-    # i3lock-color
-    git clone https://aur.archlinux.org/i3lock-color.git
-    cd i3lock-color
-    makepkg --noconfirm -si
-}
 
 # INSTALACION DE TODOS LOS PAQUETES
-
-function paquetes() {
-    # Alacritty bspwm sxhkd feh polybar picom flameshot rofi sddm zsh lsd bat zsh-syntax-highlighting zsh-autosuggestions
-    sudo pacman -S --noconfirm bspwm sxhkd feh polybar picom flameshot rofi sddm zsh lsd bat zsh-syntax-highlighting zsh-autosuggestions
-    sudo pacman -S --noconfirm kitty firefox mousepad lxappearance thunar mpd libmpdclient blueberry yakuake
-    sudo pacman -S --noconfirm open-vm-tools flatpak bluez bluez-utils
-
-    # tema para sddm
-    yay -S --noconfirm sddm-theme-sugar-candy-git i3-volume
-    yay -S --noconfirm picom-git betterlockscreen checkupdates-with-aur
-}
-
 # INSTALACION DE BETTERLOCKSCREEN
 
-function betterlockscreen() {
-
-    sudo systemctl enable betterlockscreen@$USER
-}
 
 # MENSAJES PARA FINALIZAR INSTALACIÓN
 
-function finalizacion() {
-    echo "INSTALACIÓN FINALIZADA"
-    notify-send "INSTALACIÓN FINALIZADA"
-    sleep 1
-    notify-send "3"
-    sleep 1
-    notify-send "2"
-    sleep 1
-    notify-send "1"
-    sleep 1
-    notify-send "REINICIANDO..."
-    sleep 1
-    reboot
-}
 
 # SE COMPRUEBA SI EL INSTALADOR SE EJECUTA COMO ROOT
 
 if [ $(whoami) != 'root' ]; then
     ruta=$(pwd)
-    requerimientos
-    paquetes
     copia "$ruta"
-    betterlockscreen "$ruta"
-    finalizacion
+
 else
     echo 'Error, el script no debe ser ejecutado como root.'
     exit 0
