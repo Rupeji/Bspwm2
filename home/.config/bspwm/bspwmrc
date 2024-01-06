@@ -36,7 +36,7 @@ xinput set-prop 'Logitech G502 HERO Gaming Mouse' 'libinput Accel Profile Enable
 
 #AutoStart
 #picom -b --backend glx --xrender-sync-fence --blur-method none --vsync
-picom -b --experimental-backends --backend glx --blur-method none --animations --animation-for-open-window zoom --vsync & #compositor
+picom -b --experimental-backends --backend xrender --blur-method none --animations --animation-for-open-window zoom --vsync & #compositor
 #picom  --backend glx --xrender-sync-fence --blur-method none --animations --animation-for-open-window zoom --vsync & #compositor
 kill -9 $(pgrep -f 'polybar') >/dev/null 2>&1
 polybar-msg cmd quit >/dev/null 2>&1
