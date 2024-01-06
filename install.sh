@@ -8,12 +8,12 @@
 
 function copia() {
     # Kitty    
-    #mkdir "$HOME/.config/kitty"
-    cp -rv $1/home/* "$HOME/"
+    mkdir "$HOME/.config/"
+    cp -rv ~/Bspwm2/home/* "$HOME/.config/"
 
     # fonts
-    sudo cp -rv $1/root/usr/share/fonts/* "/usr/share/fonts/"
-    sudo cp -rv $1/root/usr/bin/* "/usr/bin/"
+    sudo cp -rv ~/Bspwm2/root/usr/share/fonts/* "/usr/share/fonts/"
+    sudo cp -rv ~/Bspwm2/root/usr/bin/* "/usr/bin/"
 }
 
 # INSTALACION DE REQUERIMIENTOS
