@@ -41,25 +41,18 @@ function requerimientos() {
 function paquetes() {
     # Alacritty bspwm sxhkd feh polybar picom flameshot rofi sddm zsh lsd bat zsh-syntax-highlighting zsh-autosuggestions
     sudo pacman -S --noconfirm bspwm sxhkd feh polybar picom flameshot rofi sddm zsh lsd bat zsh-syntax-highlighting zsh-autosuggestions
-    sudo pacman -S --noconfirm kitty firefox mousepad lxappearance thunar mpd libmpdclient
+    sudo pacman -S --noconfirm kitty firefox mousepad lxappearance thunar mpd libmpdclient blueberry yakuake flatpak
     #sudo pacman -S --noconfirm open-vm-tools
 
     # tema para sddm
-    yay -S --noconfirm sddm-theme-sugar-candy-git
+    yay -S --noconfirm sddm-theme-sugar-candy-git i3-volume
+    yay -S --noconfirm picom-git betterlockscreen
 }
 
 # INSTALACION DE BETTERLOCKSCREEN
 
 function betterlockscreen() {
-    cd "$1/dotfiles/betterlockscreen"
-    sudo wget https://github.com/betterlockscreen/betterlockscreen/archive/refs/heads/main.zip
-    sudo unzip main.zip
 
-    cd betterlockscreen-main/
-    chmod u+x betterlockscreen
-    sudo cp -rv betterlockscreen /usr/local/bin/
-
-    sudo cp -rv system/betterlockscreen@.service /usr/lib/systemd/system/
     sudo systemctl enable betterlockscreen@$USER
 }
 
