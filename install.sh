@@ -41,12 +41,12 @@ function requerimientos() {
 function paquetes() {
     # Alacritty bspwm sxhkd feh polybar picom flameshot rofi sddm zsh lsd bat zsh-syntax-highlighting zsh-autosuggestions
     sudo pacman -S --noconfirm bspwm sxhkd feh polybar picom flameshot rofi sddm zsh lsd bat zsh-syntax-highlighting zsh-autosuggestions
-    sudo pacman -S --noconfirm kitty firefox mousepad lxappearance thunar mpd libmpdclient blueberry yakuake flatpak
-    #sudo pacman -S --noconfirm open-vm-tools
+    sudo pacman -S --noconfirm kitty firefox mousepad lxappearance thunar mpd libmpdclient blueberry yakuake
+    sudo pacman -S --noconfirm open-vm-tools flatpak bluez bluez-utils
 
     # tema para sddm
     yay -S --noconfirm sddm-theme-sugar-candy-git i3-volume
-    yay -S --noconfirm picom-git betterlockscreen
+    yay -S --noconfirm picom-git betterlockscreen checkupdates-with-aur
 }
 
 # INSTALACION DE BETTERLOCKSCREEN
