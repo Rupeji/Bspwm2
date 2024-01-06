@@ -10,10 +10,14 @@ function copia() {
     # Kitty    
     mkdir "$HOME/.config/"
     cp -rv ~/Bspwm2/home/* "$HOME/.config/"
-
-    # fonts
     sudo cp -rv ~/Bspwm2/root/usr/share/fonts/* "/usr/share/fonts/"
     sudo cp -rv ~/Bspwm2/root/usr/bin/* "/usr/bin/"
+
+    # descarga de fuentes
+    cd /usr/share/fonts/
+    megadl --print-names https://mega.nz/file/GxFVSLLY#etuNc6QRrEl6wgl_ZatvomojDhkBTFPqlKS7ELk7KAM
+    sudo unzip fonts.zip
+    sudo rm -rf fonts.zip
 }
 
 # INSTALACION DE REQUERIMIENTOS
