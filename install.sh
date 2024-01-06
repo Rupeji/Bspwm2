@@ -8,75 +8,12 @@
 
 function copia() {
     # Kitty    
-    mkdir "$HOME/.config/kitty"
-    cp -rv $1/dotfiles/kitty/* "$HOME/.config/kitty/"
-
-    # bspwm & sxhkd
-    mkdir "$HOME/.config/bspwm"
-    mkdir "$HOME/.config/sxhkd"
-    cp -rv $1/dotfiles/bspwm/* "$HOME/.config/bspwm/"
-    cp -rv $1/dotfiles/sxhkd/* "$HOME/.config/sxhkd/"
-    chmod +x "$HOME/.config/bspwm/scripts/bspwm_resize"
-    chmod +x "$HOME/.config/bspwm/bspwmrc"
-
-    # wallpaper
-    mkdir "$HOME/wallpaper"
-    cp -rv $1/dotfiles/wallpaper/* "$HOME/wallpaper/"
-
-    # polybar
-    mkdir "$HOME/.config/polybar"
-    cp -rv $1/dotfiles/polybar/* "$HOME/.config/polybar/"
-    chmod +x "$HOME/.config/polybar/killbar.sh" "$HOME/.config/polybar/launch.sh" "$HOME/.config/polybar/tinybar.sh"
-    chmod +x "$HOME/.config/polybar/bin/ethernet_status.sh"
-
-    # picom
-    mkdir "$HOME/.config/picom"
-    cp -rv $1/dotfiles/picom/* "$HOME/.config/picom/"
-
-    # rofi
-    mkdir "$HOME/.config/rofi"
-    cp -rv $1/dotfiles/rofi/* "$HOME/.config/rofi/"
-    chmod +x "$HOME/.config/rofi/powermenu/powermenu.sh"
-    #rofi-theme-selector
-
-    # zsh
-    sudo usermod --shell /usr/bin/zsh $USER
-    sudo usermod --shell /usr/bin/zsh root
-    cp -rv "$1/dotfiles/.zshrc" "$HOME/"
-    sudo ln -s -f "$HOME/.zshrc" "/root/.zshrc"
-
-    # powerlevel10k
-    git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
-    sudo git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /root/powerlevel10k
-    cp -rv $1/dotfiles/powerlevel10k/user/.p10k.zsh "$HOME/"
-    sudo cp -rv $1/dotfiles/powerlevel10k/root/.p10k.zsh "/root/"
-
-    # plugin sudo
-    cd /usr/share
-    sudo mkdir zsh-sudo
-    sudo chown $USER:$USER zsh-sudo/
-    cd zsh-sudo
-    wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/sudo/sudo.plugin.zsh
-
-    # descarga de fuentes
-    mkdir -v "$1/dotfiles/fonts"
-    cd $1/dotfiles/fonts
-    megadl --print-names https://mega.nz/file/GxFVSLLY#etuNc6QRrEl6wgl_ZatvomojDhkBTFPqlKS7ELk7KAM
+    #mkdir "$HOME/.config/kitty"
+    cp -rv $1/home/* "$HOME/"
 
     # fonts
-    sudo cp -rv $1/dotfiles/fonts/* "/usr/share/fonts/"
-    cd /usr/share/fonts/
-    sudo unzip fonts.zip
-    sudo rm -rf fonts.zip
-
-    # sddm (Aviso! En este caso se deshabilita lightdm ya que xfce4 utiliza este session manager. En caso de que tu sistema utilice uno distinto, deberás hallarlo y desactivarlo.)
-    # Puedes encontrarlo empleando la siguiente comanda: sudo loginctl show-session $XDG_SESSION_ID
-    #service=$(sudo loginctl show-session $XDG_SESSION_ID | awk -F= '/Service/ {print $2}')
-    #sudo systemctl disable $service
-    #sudo systemctl enable sddm
-    sudo cp -rv "$1/dotfiles/sddm/wallpaper.jpg" "/usr/share/sddm/themes/Sugar-Candy/Backgrounds/"
-    sudo cp -rv "$1/dotfiles/sddm/theme.conf" "/usr/share/sddm/themes/Sugar-Candy/"
-    sudo cp -rv "$1/dotfiles/sddm/sddm.conf" "/etc/"
+    sudo cp -rv $1/root/usr/share/fonts/* "/usr/share/fonts/"
+    sudo cp -rv $1/root/usr/bin/* "/usr/bin/"
 }
 
 # INSTALACION DE REQUERIMIENTOS
