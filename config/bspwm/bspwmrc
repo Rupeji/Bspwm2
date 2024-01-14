@@ -58,7 +58,7 @@ bspc rule -a scratch sticky=on state=floating focus=on
 #  ╠═╣║ ║ ║ ║ ║╚═╗ ║ ╠═╣╠╦╝ ║ 
 #  ╩ ╩╚═╝ ╩ ╚═╝╚═╝ ╩ ╩ ╩╩╚═ ╩
 
-xrandr --output Virtual-1 --mode 1920x1080 --rate 59.96 &
+#xrandr --output Virtual-1 --mode 1920x1080 --rate 59.96 &
 #xrandr --output VGA-1 --mode 1920x1080 --rate 59.96 &
 
 # Set system vars for polybar
