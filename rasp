@@ -1,0 +1,213 @@
+#!/usr/bin/env bash
+
+function pausa(){
+read -p "$*"
+}
+
+CRE=$(tput setaf 1)
+CYE=$(tput setaf 3)
+CGR=$(tput setaf 2)
+CBL=$(tput setaf 4)
+BLD=$(tput bold)
+CNC=$(tput sgr0)
+
+backup_folder=~/.RiceBackup
+date=$(date +%Y%m%d-%H%M%S)
+
+
+########## ---------- You must not run this as root ---------- ##########
+
+if [ "$(id -u)" = 0 ]; then
+    echo "This script MUST NOT be run as root user."
+    exit 1
+fi
+
+########## ---------- Install packages ---------- ##########
+
+
+dependencias=(base-devel rustup pacman-contrib bspwm polybar sxhkd rtkit gvfs \
+			  alacritty brightnessctl dunst rofi lsd stalonetray \
+			  jq polkit-gnome git playerctl mpd xclip zip nano \
+			  ncmpcpp ranger mpc mousepad xdo xdotool kitty jgmenu \
+			  feh ueberzug maim pamixer vlc libwebp xdg-user-dirs \
+			  webp-pixbuf-loader xorg-xprop xorg-xkill physlock \
+			  papirus-icon-theme ttf-inconsolata sddm wget ttf-joypixels \
+			  ttf-jetbrains-mono ttf-jetbrains-mono-nerd ttf-terminus-nerd \
+			  zsh zsh-autosuggestions zsh-history-substring-search zsh-syntax-highlighting \
+			  imagemagick xorg-xdpyinfo xorg-xsetroot xorg-xwininfo xorg-xrandr fastfetch \
+			  thunar firefox qt5-quickcontrols2 qt5-graphicaleffects qt5-svg lxappearance unzip)
+
+is_installed() {
+  pacman -Qi "$1" &> /dev/null
+  return $?
+}
+
+printf "%s%sChecking for required packages...%s\n" "${BLD}" "${CBL}" "${CNC}"
+for paquete in "${dependencias[@]}"
+do
+  if ! is_installed "$paquete"; then
+    sudo pacman -S "$paquete" --noconfirm
+    printf "\n"
+  else
+    printf '%s%s is already installed on your system!%s\n' "${CGR}" "$paquete" "${CNC}"
+    sleep 1
+  fi
+done
+sleep 3
+clear
+
+########## ---------- Preparing Folders ---------- ##########
+
+# Verifica si el archivo user-dirs.dirs no existe en ~/.config
+	if [ ! -e "$HOME/.config/user-dirs.dirs" ]; then
+		xdg-user-dirs-update
+		echo "Creating xdg-user-dirs"
+	fi
+sleep 2 
+clear
+
+########## ---------- Copy the Rice! ---------- ##########
+
+
+printf "Copying files to respective directories..\n"
+
+mkdir "$HOME/.config/"
+rename 's/config/.config/' *
+mkdir "$HOME/.themes/"
+rename 's/config/.themes/' *
+cp -rv $HOME/Bspwm3/config/* "$HOME/.config/"
+sudo cp -rv $HOME/Bspwm3/misc/fonts/* "/usr/share/fonts/"
+cp -rv $HOME/Bspwm3/home/themes/themes.zip "$HOME/.themes/"
+cd ~/.themes/
+unzip themes.zip
+rm themes.zip
+
+sleep 1
+cd
+cd /usr/share/fonts
+sudo wget https://github.com/ryanoasis/nerd-fonts/releases/download/v3.1.1/Hack.zip
+cd /usr/share/fonts
+sudo unzip Hack.zip
+sudo rm Hack.zip
+fc-cache -rv >/dev/null 2>&1
+printf "%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
+sleep 3
+
+#echo -e "Pulsa [Enter] para continuar..."
+#pausa
+
+########## ---------- Installing Paru & others ---------- ##########
+
+
+
+# Installing Paru
+	if command -v paru >/dev/null 2>&1; then
+		printf "%s%sParu is already installed%s\n" "${BLD}" "${CGR}" "${CNC}"
+	else
+		printf "%s%sInstalling paru%s\n" "${BLD}" "${CBL}" "${CNC}"
+		{
+			cd "$HOME" || exit
+			git clone https://aur.archlinux.org/paru-bin.git
+			cd paru-bin || exit
+			makepkg -si --noconfirm
+		} || {
+			printf "\n%s%sFailed to install Paru. You may need to install it manually%s\n" "${BLD}" "${CRE}" "${CNC}"
+			}
+	fi
+
+# Intalling tdrop for scratchpads
+	if command -v tdrop >/dev/null 2>&1; then
+		printf "\n%s%sTdrop is already installed%s\n" "${BLD}" "${CGR}" "${CNC}"
+	else
+		printf "\n%s%sInstalling tdrop, this should be fast!%s\n" "${BLD}" "${CBL}" "${CNC}"
+		paru -S tdrop-git --skipreview --noconfirm
+	fi
+
+# Intalling xqpp
+	if command -v xqp >/dev/null 2>&1; then
+		printf "\n%s%sxqp is already installed%s\n" "${BLD}" "${CGR}" "${CNC}"
+	else
+		printf "\n%s%sInstalling xqp, this should be fast!%s\n" "${BLD}" "${CBL}" "${CNC}"
+		paru -S xqp --skipreview --noconfirm
+	fi
+
+
+# Intalling picom
+	if command -v picom-ftlabs-git >/dev/null 2>&1; then
+		printf "\n%s%spicom-ftlabs-git is already installed%s\n" "${BLD}" "${CGR}" "${CNC}"
+	else
+		printf "\n%s%sInstalling picom-ftlabs-git, this should be fast!%s\n" "${BLD}" "${CBL}" "${CNC}"
+		paru -S picom-ftlabs-git --skipreview --noconfirm
+	fi
+	
+
+# Installing Eww
+	if command -v eww >/dev/null 2>&1; then 
+		printf "\n%s%sEww is already installed%s\n" "${BLD}" "${CGR}" "${CNC}"
+	else
+		printf "\n%s%sInstalling Eww, this could take 10 mins or more.%s\n" "${BLD}" "${CBL}" "${CNC}"
+		{
+			sudo pacman -S rustup --noconfirm
+			cd "$HOME" || exit
+			git clone https://github.com/elkowar/eww
+			cd eww || exit
+			cargo build --release --no-default-features --features x11
+			sudo install -m 755 "$HOME/eww/target/release/eww" -t /usr/bin/
+		} && {
+			cd "$HOME" || exit
+			rm -rf {paru-bin,.cargo,.rustup,eww}
+		} || {
+        printf "\n%s%sFailed to install Eww. You may need to install it manually%s\n" "${BLD}" "${CRE}" "${CNC}"
+    }
+fi
+
+########## ---------- Enabling MPD service ---------- ##########
+
+
+
+# Verifica si el servicio mpd está habilitado a nivel global (sistema)
+	if systemctl is-enabled --quiet mpd.service; then
+		printf "\n%s%sDisabling and stopping the global mpd service%s\n" "${BLD}" "${CBL}" "${CNC}"
+		sudo systemctl stop mpd.service
+		sudo systemctl disable mpd.service
+	fi
+
+printf "\n%s%sEnabling and starting the user-level mpd service%s\n" "${BLD}" "${CYE}" "${CNC}"
+systemctl --user enable --now mpd.service
+
+printf "%s%sDone!!%s\n\n" "${BLD}" "${CGR}" "${CNC}"
+sleep 2
+
+########## --------- Changing shell to zsh ---------- ##########
+
+
+printf "\n%s%sChanging your shell to zsh. Your root password is needed.%s\n\n" "${BLD}" "${CYE}" "${CNC}"
+# Cambia la shell a zsh
+cp -rv $HOME/Bspwm3/home/.zshrc "$HOME"
+cp -rv $HOME/Bspwm3/home/.gtkrc-2.0 "$HOME"
+#sed -i -e 's/name="Raleigh"/name="Dracula"/g' $HOME/.gtkrc-2.0
+cp -rv $HOME/Bspwm3/home/Music "$HOME"
+sudo usermod --shell /usr/bin/zsh $USER
+sudo usermod --shell /usr/bin/zsh root
+sudo ln -s -f "$HOME/.zshrc" "/root/.zshrc"
+# powerlevel10k
+cd
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
+sudo git clone --depth=1 https://github.com/romkatv/powerlevel10k.git /root/powerlevel10k
+cd Bspwm3/
+sudo cp -f ~/Bspwm3/Zsh/powerlevel10k/user/.p10k.zsh "$HOME/"
+sudo cp -f ~/Bspwm3/Zsh/powerlevel10k/root/.p10k.zsh "/root/"
+
+printf "%s%sShell changed to zsh.%s\n\n" "${BLD}" "${CGR}" "${CNC}"
+
+sudo systemctl enable sddm
+git clone https://github.com/Rupeji/simple-sddm.git ~/simple-sddm
+sudo mv ~/simple-sddm /usr/share/sddm/themes/
+#echo 'xrandr --output Virtual-1 --mode 1920x1080 --rate 59.96' | sudo tee -a /usr/share/sddm/scripts/Xsetup
+#echo '#xrandr --output VGA-1 --mode 1920x1080 --rate 59.96' | sudo tee -a /usr/share/sddm/scripts/Xsetup
+sudo sed -i -e 's/Current=/Current=simple-sddm/g' /usr/lib/sddm/sddm.conf.d/default.conf
+
+
+printf "%s%sTerminado, reiniciando en 5....%s\n\n" "${BLD}" "${CGR}" "${CNC}"
+sleep 5
+reboot
